@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        #stopwatch-container {
+            text-align: center;
+        }
+
+        #circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: conic-gradient(from -90deg, #3498db 50%, #ecf0f1 50%);
+            transform: rotate(90deg);
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        #time {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        #buttons {
+            margin-top: 20px;
+        }
+
+        button {
+            font-size: 16px;
+            margin: 0 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let timer;
+            let isRunning = false;
+            let startTime;
+            let elapsedTime = 0;
+
+            const circle = document.getElementById('circle');
+            const timeDisplay = document.getElementById('time');
+            const startButton = document.getElementById('start');
+            const pauseButton = document.getElementById('pause');
+            const resetButton = document.getElementById('reset');
+
+            function updateDisplay() {
+                const seconds = Math.floor(elapsedTime / 1000);
+                const milliseconds = Math.floor((elapsedTime % 1000) / 10);
+                timeDisplay.textContent = `${seconds.toString().padStart(2, '0')}:${milliseconds.toString().padStart(2, '0')}`;
+            }
+
+            function startTimer() {
+                isRunning = true;
+                startTime = Date.now() - elapsedTime;
+                timer = setInterval(function () {
+                    elapsedTime = Date.now() - startTime;
+                    updateDisplay();
+                }, 10);
+            }
+
+            function pauseTimer() {
+                isRunning = false;
+                clearInterval(timer);
+            }
+
+            function resetTimer() {
+                isRunning = false;
+                clearInterval(timer);
+                elapsedTime = 0;
+                updateDisplay();
+            }
+
+            startButton.addEventListener('click', function () {
+                if (!isRunning) {
+                    startTimer();
+                }
+            });
+
+            pauseButton.addEventListener('click', function () {
+                if (isRunning) {
+                    pauseTimer();
+                }
+            });
+
+            resetButton.addEventListener('click', function () {
+                resetTimer();
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="stopwatch-container">
+        <div id="circle"></div>
+        <div id="time">00:00</div>
+        <div id="buttons">
+            <button id="start">Start</button>
+            <button id="pause">Pause</button>
+            <button id="reset">Reset</button>
+        </div>
+    </div>
+</body>
+</html>
